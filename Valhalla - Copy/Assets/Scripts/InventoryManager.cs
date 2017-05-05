@@ -17,14 +17,25 @@ public class InventoryManager : MonoBehaviour
     
     int zeroToZed;
 
-    string ItemDbConnectPath = Application.dataPath + "ItemDatabase.db";
-    IDbConnection dbConnection;
-    
+    string ItemDbConnectPath;
+    SqliteConnection dbConnection;
+    SqliteCommand sqlCommand;
+
+    string cmdText;
+
     private void connectDatabases()
     {
-        dbConnection = (IDbConnection)new SqliteConnection(ItemDbConnectPath);
+        ItemDbConnectPath = "Data Source=" + Application.dataPath + "/ItemDatabase.db";
+        print(ItemDbConnectPath);
+        dbConnection = new SqliteConnection(ItemDbConnectPath);
         dbConnection.Open();
-
+        cmdText = "select * from mats";
+        sqlCommand = new SqliteCommand(cmdText, dbConnection);
+        SqliteDataReader reader = sqlCommand.ExecuteReader();
+        while (reader.Read())
+        {
+            Debug.Log(reader["name"]);//reads all the names
+        }
         dbConnection.Close();
     }
 
